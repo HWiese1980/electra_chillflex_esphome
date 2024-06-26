@@ -1,0 +1,46 @@
+esphome:
+  name: "ir-project"
+  platform: esp8266
+  board: d1_mini
+  includes: 
+    - electra/electra_ac.h
+  libraries:
+    - IRremoteESP8266
+
+wifi:
+  ssid:     !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: true
+
+captive_portal:
+
+logger:
+  level: VERBOSE
+
+api:
+
+ota:
+  platform: esphome
+
+remote_receiver:
+  pin:
+    number: D5
+    inverted: true
+  dump: all
+
+sensor:
+
+remote_transmitter:
+  pin: D6
+  carrier_duty_percent: 50%
+  id: ir_transmitter
+
+climate:
+- platform: custom
+  lambda: |-
+    auto ac = new ElectraAC();
+    App.register_component(ac);
+    return {ac};
+
+  climates:
+    - name: "Arbeitszimmer AC"
